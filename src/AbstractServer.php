@@ -51,7 +51,11 @@ abstract class AbstractServer
 
             $response = new Response();
 
+            $response = $this->preRequest($request, $response);
+
             $response = $this->controllerInvoker->invoke($controller, $request, $response);
+
+            $response = $this->postRequest($request, $response);
 
             return $response;
 
@@ -60,6 +64,18 @@ abstract class AbstractServer
         } catch (Exception $ex) {
             return $this->handleUncaughtException($ex, $request);
         }
+    }
+
+
+    protected function preRequest(Request $request, Response $response):Response
+    {
+        return $response;
+    }
+
+
+    protected function postRequest(Request $request, Response $response):Response
+    {
+        return $response;
     }
 
 
