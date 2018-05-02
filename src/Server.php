@@ -14,6 +14,7 @@ use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use TS\DependencyInjection\Injector;
+use TS\DependencyInjection\InspectableInjectorInterface;
 use TS\Web\Microserver\Controller\ControllerConfig;
 use TS\Web\Microserver\Controller\DIControllerInvoker;
 use TS\Web\Microserver\Controller\DIControllerResolver;
@@ -32,9 +33,9 @@ class Server extends AbstractServer
 
     private $injector;
 
-    public function __construct()
+    public function __construct(InspectableInjectorInterface $injector = null)
     {
-        $this->injector = new Injector();
+        $this->injector = $injector ?? new Injector();
         $routeProvider = new RouteProvider(new AnnotationReader());
         $diControllerResolver = new DIControllerResolver($this->injector);
         $diControllerInvoker = new DIControllerInvoker($this->injector);
