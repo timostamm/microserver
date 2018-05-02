@@ -20,8 +20,8 @@ class RoutingExceptionHandler extends ExceptionHandler
     public function handleException(\Exception $exception, Request $request): ?Response
     {
         if ($exception instanceof NoConfigurationException) {
-            $msg = sprintf('No routes configured.');
-            throw new HttpException(Response::HTTP_SERVICE_UNAVAILABLE, $msg, $exception);
+            $msg = sprintf('Not found.');
+            throw new HttpException(Response::HTTP_NOT_FOUND, $msg, $exception);
         }
         if ($exception instanceof MethodNotAllowedException) {
             $msg = sprintf('Method %s is not allowed.', $request->getMethod());
