@@ -32,7 +32,7 @@ abstract class AbstractServer
     private $routes = null;
 
 
-    public function __construct(RouteProvider $routeProvider = null, ControllerResolverInterface $controllerResolver = null, ControllerInvokerInterface $controllerInvoker = null)
+    public function __construct(RouteProvider $routeProvider, ControllerResolverInterface $controllerResolver, ControllerInvokerInterface $controllerInvoker)
     {
         $this->routeProvider = $routeProvider;
         $this->controllerResolver = $controllerResolver;
@@ -81,8 +81,8 @@ abstract class AbstractServer
 
     protected function matchRequest(Request $request): void
     {
-        $context = $this->getContext($request);
-        $matcher = $this->getMatcher($context);
+        $context = $this->createRequestContext($request);
+        $matcher = $this->createUrlMatcher($context);
 
         try {
 
@@ -105,19 +105,19 @@ abstract class AbstractServer
         }
     }
 
-    protected function getContext(Request $request): RequestContext
+    protected function createRequestContext(Request $request): RequestContext
     {
         $context = new RequestContext();
         $context->fromRequest($request);
         return $context;
     }
 
-    protected function getMatcher(RequestContext $context): UrlMatcher
+    protected function createUrlMatcher(RequestContext $context): UrlMatcher
     {
-        return new UrlMatcher($this->getRoutes(), $context);
+        return new UrlMatcher($this->getRouteCollection(), $context);
     }
 
-    protected function getRoutes(): RouteCollection
+    protected function getRouteCollection(): RouteCollection
     {
         if (!$this->routes) {
             $this->routes = new RouteCollection();
