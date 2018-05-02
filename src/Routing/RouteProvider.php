@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteProvider
+class RouteProvider implements RouteProviderInterface
 {
 
     protected $reader;

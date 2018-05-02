@@ -12,7 +12,6 @@ namespace TS\Web\Microserver;
 use Exception;
 use TS\Web\Microserver\Controller\ControllerInvokerInterface;
 use TS\Web\Microserver\Controller\ControllerResolverInterface;
-use TS\Web\Microserver\Routing\RouteProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -21,6 +20,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use TS\Web\Microserver\Routing\RouteProviderInterface;
 
 
 abstract class AbstractServer
@@ -32,7 +32,7 @@ abstract class AbstractServer
     private $routes = null;
 
 
-    public function __construct(RouteProvider $routeProvider, ControllerResolverInterface $controllerResolver, ControllerInvokerInterface $controllerInvoker)
+    public function __construct(RouteProviderInterface $routeProvider, ControllerResolverInterface $controllerResolver, ControllerInvokerInterface $controllerInvoker)
     {
         $this->routeProvider = $routeProvider;
         $this->controllerResolver = $controllerResolver;
