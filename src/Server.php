@@ -18,6 +18,7 @@ use TS\DependencyInjection\InspectableInjectorInterface;
 use TS\Web\Microserver\Controller\ControllerConfig;
 use TS\Web\Microserver\Controller\DIControllerInvoker;
 use TS\Web\Microserver\Controller\DIControllerResolver;
+use TS\Web\Microserver\Controller\SimpleControllerResolver;
 use TS\Web\Microserver\Exception\ExceptionFormatter;
 use TS\Web\Microserver\Exception\ExceptionHandler;
 use TS\Web\Microserver\Exception\HttpException;
@@ -35,19 +36,27 @@ class Server extends AbstractServer
 
     public function __construct(InspectableInjectorInterface $injector = null)
     {
-        $this->injector = $injector ?? new Injector();
-        $routeProvider = new RouteProvider(new AnnotationReader());
-        $diControllerResolver = new DIControllerResolver($this->injector);
-        $diControllerInvoker = new DIControllerInvoker($this->injector);
+        if (! $injector) {
+            $injector = new Injector();
+            $injector->alias(ParameterConverter::class, SimpleParameterConverter::class);
+            $injector->alias(ExceptionFormatter::class, PlaintextExceptionFormatter::class, [
+                '$includeDetails' => true
+            ]);
+            $injector->alias(ExceptionHandler::class, RoutingExceptionHandler::class);
+        }
+        $this->injector = $injector;
+
         parent::__construct(
-            $routeProvider,
-            $diControllerResolver,
-            $diControllerInvoker
+            new RouteProvider(new AnnotationReader()),
+            new DIControllerResolver($this->injector),
+            new DIControllerInvoker($this->injector)
         );
-        $config = new ControllerConfig($routeProvider, $diControllerResolver);
-        $this->injector->alias(ParameterConverter::class, SimpleParameterConverter::class);
-        $this->injector->alias(ExceptionFormatter::class, PlaintextExceptionFormatter::class);
-        $this->injector->alias(ExceptionHandler::class, RoutingExceptionHandler::class);
+
+        $config = $this->injector->instantiate(ControllerConfig::class, [
+            RouteProvider::class => $this->routeProvider,
+            SimpleControllerResolver::class => $this->controllerResolver
+        ]);
+
         $this->configure($this->injector, $config);
     }
 
@@ -82,6 +91,7 @@ class Server extends AbstractServer
         if ($ex instanceof HttpException) {
             return $formatter->formatHttpException($ex, $request);
         }
+
         return $formatter->formatUnhandledException($ex, $request);
     }
 
