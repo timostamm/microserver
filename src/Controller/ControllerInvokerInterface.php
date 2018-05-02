@@ -18,7 +18,7 @@ namespace TS\Web\Microserver\Controller;
 use LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TS\Web\Microserver\HttpException;
+use TS\Web\Microserver\Exception\HttpException;
 
 
 interface ControllerInvokerInterface

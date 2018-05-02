@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use TS\DependencyInjection\Exception\InjectionException;
 use TS\DependencyInjection\Injector\ArgumentInspectionInterface;
 use TS\DependencyInjection\InspectableInjectorInterface;
-use TS\Web\Microserver\HttpException;
+use TS\Web\Microserver\Exception\HttpException;
 use TS\Web\Microserver\Routing\ParameterConverter;
 
 class DIControllerInvoker implements ControllerInvokerInterface

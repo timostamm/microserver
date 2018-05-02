@@ -16,7 +16,7 @@ class ControllerConfig {
     private $routeProvider;
     private $controllerResolver;
 
-    public function __construct(RouteProvider $routeProvider, DIControllerResolver $controllerResolver)
+    public function __construct(RouteProvider $routeProvider, SimpleControllerResolver $controllerResolver)
     {
         $this->routeProvider = $routeProvider;
         $this->controllerResolver = $controllerResolver;

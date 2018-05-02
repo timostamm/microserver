@@ -6,7 +6,7 @@
  * Time: 01:30
  */
 
-namespace TS\Web\Microserver;
+namespace TS\Web\Microserver\Exception;
 
 use RuntimeException;
 

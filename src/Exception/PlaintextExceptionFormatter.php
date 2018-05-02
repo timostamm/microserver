@@ -8,11 +8,10 @@
 
 namespace TS\Web\Microserver\Exception;
 
-use TS\Web\Microserver\HttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SimpleExceptionHandler extends ExceptionHandler
+class PlaintextExceptionFormatter extends ExceptionFormatter
 {
 
     protected $includeDetails;
@@ -23,7 +22,8 @@ class SimpleExceptionHandler extends ExceptionHandler
     }
 
 
-    public function handleHttpException(HttpException $ex, Request $request): Response
+
+    public function formatHttpException(HttpException $ex, Request $request): Response
     {
         $response = new Response();
         $response->setStatusCode($ex->getStatusCode());
@@ -35,9 +35,11 @@ class SimpleExceptionHandler extends ExceptionHandler
     }
 
 
-    public function handleUncaughtException(\Exception $ex, Request $request): Response
+
+    public function formatUnhandledException(\Exception $ex, Request $request): Response
     {
         $response = new Response();
+        $response->headers->set('Content-Type', 'text/plain');
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         $response->setCharset('UTF-8');
         if ($this->includeDetails) {
@@ -45,7 +47,6 @@ class SimpleExceptionHandler extends ExceptionHandler
         } else {
             $response->setContent('Internal Server Error');
         }
-        $response->headers->set('Content-Type', 'text/plain');
         return $response;
     }
 

@@ -14,9 +14,6 @@ use TS\Web\Microserver\Controller\ControllerInvokerInterface;
 use TS\Web\Microserver\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\NoConfigurationException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -59,10 +56,8 @@ abstract class AbstractServer
 
             return $response;
 
-        } catch (HttpException $ex) {
-            return $this->handleHttpException($ex, $request);
         } catch (Exception $ex) {
-            return $this->handleUncaughtException($ex, $request);
+            return $this->handleException($ex, $request);
         }
     }
 
@@ -83,26 +78,10 @@ abstract class AbstractServer
     {
         $context = $this->createRequestContext($request);
         $matcher = $this->createUrlMatcher($context);
-
-        try {
-
-            $parameters = $matcher->matchRequest($request);
-            $request->attributes->add($parameters);
-            unset($parameters['_route'], $parameters['_controller']);
-            $request->attributes->set('_route_params', $parameters);
-
-        } catch (NoConfigurationException $exception) {
-            $msg = sprintf('No routes configured.');
-            throw new HttpException(Response::HTTP_SERVICE_UNAVAILABLE, $msg, $exception);
-
-        } catch (MethodNotAllowedException $exception) {
-            $msg = sprintf('Method %s is not allowed.', $request->getMethod());
-            throw new HttpException(Response::HTTP_METHOD_NOT_ALLOWED, $msg, $exception);
-
-        } catch (ResourceNotFoundException $exception) {
-            $msg = sprintf('Not found.', $request->getMethod());
-            throw new HttpException(Response::HTTP_NOT_FOUND, $msg, $exception);
-        }
+        $parameters = $matcher->matchRequest($request);
+        $request->attributes->add($parameters);
+        unset($parameters['_route'], $parameters['_controller']);
+        $request->attributes->set('_route_params', $parameters);
     }
 
     protected function createRequestContext(Request $request): RequestContext
@@ -127,10 +106,7 @@ abstract class AbstractServer
     }
 
 
-    abstract protected function handleHttpException(HttpException $ex, Request $request): Response;
-
-
-    abstract protected function handleUncaughtException(Exception $ex, Request $request): Response;
+    abstract protected function handleException(Exception $ex, Request $request): Response;
 
 
 }

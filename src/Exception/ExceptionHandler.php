@@ -8,16 +8,24 @@
 
 namespace TS\Web\Microserver\Exception;
 
-use TS\Web\Microserver\HttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class ExceptionHandler
 {
 
-    abstract public function handleHttpException(HttpException $ex, Request $request): Response;
-
-    abstract public function handleUncaughtException(\Exception $ex, Request $request): Response;
+    /**
+     * Handles an exception that occurred while serving a request.
+     *
+     * The method may return NULL if it cannot handle the exception.
+     * Or throw a HttpException.
+     * Or return a Response.
+     *
+     * @param \Exception $ex
+     * @param Request $request
+     * @return null|Response
+     */
+    abstract public function handleException(\Exception $ex, Request $request): ?Response;
 
 
 }
