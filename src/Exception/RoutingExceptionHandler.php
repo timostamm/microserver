@@ -31,6 +31,8 @@ class RoutingExceptionHandler extends ExceptionHandler
             $msg = sprintf('Not found.');
             throw new HttpException(Response::HTTP_NOT_FOUND, $msg, $exception);
         }
+
+        return null;
     }
 
 }
