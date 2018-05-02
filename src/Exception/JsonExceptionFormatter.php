@@ -47,16 +47,15 @@ class JsonExceptionFormatter extends ExceptionFormatter
         $response = new JsonResponse();
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         $response->setCharset('UTF-8');
+
+        $data = [
+            'message' => 'Internal Server Error'
+        ];
         if ($this->includeDetails) {
-            $response->setData([
-                'message' => $ex->getMessage(),
-                'details' => $ex->__toString()
-            ]);
-        } else {
-            $response->setData([
-                'message' => 'Internal Server Error'
-            ]);
+            $data['details'] = $ex->__toString();
         }
+        $response->setData($data);
+
         return $response;
     }
 
