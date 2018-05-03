@@ -19,6 +19,7 @@
       "TS\\Web\\Microserver\\": "test/"
     }
   },
+  "license": "MIT",
   "authors": [
     {
       "name": "Timo Stamm",
