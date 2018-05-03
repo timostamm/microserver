@@ -20,6 +20,7 @@ $server = new class extends Server {
 
     protected function configure(Injector $injector, ControllerConfig $controllerConfig): void
     {
+        parent::configure($injector, $controllerConfig);
         $controllerConfig->addControllerClass(NormalController::class);
     }
 

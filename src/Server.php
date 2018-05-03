@@ -13,6 +13,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use TS\DependencyInjection\Injector;
 use TS\DependencyInjection\InspectableInjectorInterface;
 use TS\Web\Microserver\Controller\ControllerConfig;
@@ -36,15 +38,7 @@ class Server extends AbstractServer
 
     public function __construct(InspectableInjectorInterface $injector = null)
     {
-        if (! $injector) {
-            $injector = new Injector();
-            $injector->alias(ParameterConverter::class, SimpleParameterConverter::class);
-            $injector->alias(ExceptionFormatter::class, PlaintextExceptionFormatter::class, [
-                '$includeDetails' => true
-            ]);
-            $injector->alias(ExceptionHandler::class, RoutingExceptionHandler::class);
-        }
-        $this->injector = $injector;
+        $this->injector = $injector ?? new Injector();
 
         parent::__construct(
             new RouteProvider(new AnnotationReader()),
@@ -63,6 +57,27 @@ class Server extends AbstractServer
 
     protected function configure(Injector $injector, ControllerConfig $controllerConfig): void
     {
+
+        if (! $this->injector->has(ParameterConverter::class)) {
+            $injector->alias(ParameterConverter::class, SimpleParameterConverter::class);
+        }
+        if (! $this->injector->has(ExceptionFormatter::class)) {
+            $injector->alias(ExceptionFormatter::class, PlaintextExceptionFormatter::class, [
+                '$includeDetails' => true
+            ]);
+        }
+        if (! $this->injector->has(ExceptionHandler::class)) {
+            $injector->alias(ExceptionHandler::class, RoutingExceptionHandler::class);
+        }
+        if (! $this->injector->has(UrlGeneratorInterface::class)) {
+            $injector->factory(UrlGeneratorInterface::class, function (){
+                if (!$this->urlGenerator) {
+                    $this->urlGenerator = new UrlGenerator($this->getRouteCollection(), $this->requestContext);
+                }
+                return $this->urlGenerator;
+            });
+        }
+
         $controllerConfig->addControllerInstance($this);
     }
 
@@ -94,5 +109,11 @@ class Server extends AbstractServer
 
         return $formatter->formatUnhandledException($ex, $request);
     }
+
+    protected function getUrlGenerator():UrlGeneratorInterface
+    {
+        return $this->injector->instantiate(UrlGeneratorInterface::class);
+    }
+
 
 }
