@@ -6,8 +6,7 @@
     "symfony/http-foundation": "^4.0",
     "symfony/routing": "^4.0",
     "doctrine/annotations": "^1.6",
-    "doctrine/cache": "^1.7",
-    "timostamm/injector": "^1.0.0"
+    "doctrine/cache": "^1.7"
   },
   "autoload": {
     "psr-4": {

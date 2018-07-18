@@ -37,9 +37,9 @@ class SimpleController
     /**
      * @Route(path="/bar/{int}", methods={"GET"} )
      */
-    public function bar( Request $request, Response $response, int $int)
+    public function bar(Request $request, Response $response, int $int)
     {
-        return new Response("SimpleController bar " . $int );
+        return new Response("SimpleController bar " . $int);
     }
 
 

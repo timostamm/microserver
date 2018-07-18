@@ -2,11 +2,9 @@
 
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Symfony\Component\HttpFoundation\Request;
 use TS\Web\Microserver\Server;
-use TS\Web\Microserver\Normal\NormalController;
-use TS\Web\Microserver\Controller\ControllerConfig;
-use TS\DependencyInjection\Injector;
+use TS\Web\Microserver\Simple\ControllerWithDependency;
+use TS\Web\Microserver\Simple\SimpleController;
 
 
 /** @var ClassLoader $loader */
@@ -14,17 +12,9 @@ $loader = require __DIR__ . '/../vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 
-$request = Request::createFromGlobals();
-
-$server = new class extends Server {
-
-    protected function configure(Injector $injector, ControllerConfig $controllerConfig): void
-    {
-        parent::configure($injector, $controllerConfig);
-        $controllerConfig->addControllerClass(NormalController::class);
-    }
-
-};
-
-$response = $server->serve($request);
-$response->send();
+$server = new Server(true);
+$server->addController(SimpleController::class);
+$server->addController(ControllerWithDependency::class, function () {
+    return new ControllerWithDependency('dependency');
+});
+$server->serve()->send();

@@ -1,0 +1,5 @@
+
+v2.0.0 2018-06-18
+-----------------
+
+  * dropped injector - server with inversion of control is moved to https://github.com/timostamm/ioc-microserver

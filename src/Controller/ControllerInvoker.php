@@ -13,7 +13,7 @@ use LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SimpleControllerInvoker implements ControllerInvokerInterface
+class ControllerInvoker implements ControllerInvokerInterface
 {
 
     public function invoke(callable $controller, Request $request, Response $response): Response
