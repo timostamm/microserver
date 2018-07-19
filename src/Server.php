@@ -44,6 +44,7 @@ class Server
 
     public function __construct(bool $includeExceptionDetails = true, RouteProviderInterface $routeProvider = null, ControllerResolverInterface $controllerResolver = null, ControllerInvokerInterface $controllerInvoker = null)
     {
+        $this->includeExceptionDetails = $includeExceptionDetails;
         $this->routeProvider = $routeProvider ?? new RouteProvider(new AnnotationReader());
         $this->controllerResolver = $controllerResolver ?? new ControllerResolver();
         $this->controllerInvoker = $controllerInvoker ?? new ControllerInvoker();
