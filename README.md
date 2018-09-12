@@ -1,5 +1,8 @@
 # PHP Microserver
 
+[![Build Status](https://api.travis-ci.org/timostamm/microserver.png)](https://travis-ci.org/timostamm/microserver)
+
+
 Minimal web server based on Symfony components.
 
 It is very simple to use: 
