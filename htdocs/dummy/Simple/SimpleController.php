@@ -6,7 +6,7 @@
  * Time: 22:59
  */
 
-namespace TS\Web\Microserver\Simple;
+namespace dummy\Simple;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +30,7 @@ class SimpleController
      */
     public function hello()
     {
-        return new Response("SimpleController hello ");
+        return new Response("SimpleController hello");
     }
 
 

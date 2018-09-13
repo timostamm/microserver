@@ -6,7 +6,7 @@
  * Time: 22:59
  */
 
-namespace TS\Web\Microserver\Simple;
+namespace dummy\Simple;
 
 
 use Symfony\Component\HttpFoundation\Response;

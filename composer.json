@@ -15,7 +15,7 @@
   },
   "autoload-dev" : {
     "psr-4" : {
-      "TS\\Web\\Microserver\\": "test/"
+      "TS\\Web\\Microserver\\": "tests/"
     }
   },
   "license": "MIT",
@@ -26,5 +26,6 @@
     }
   ],
   "require-dev": {
+    "phpunit/phpunit": "^7.3"
   }
 }
